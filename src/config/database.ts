@@ -1,8 +1,28 @@
-import dotenv from "dotenv";
-import pg from "pg";
-dotenv.config();
+import pg, { ClientConfig } from 'pg';
 
-const { Pool } = pg;
-export const connection = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
+import AppLog from './../events/AppLog.js';
+import "./setup.js"
+
+const { Client } = pg;
+const connectionString = process.env.DATABASE_URL ?? '';
+const databaseConfig: ClientConfig = { connectionString };
+
+if (process.env.MODE === 'PROD') {
+  databaseConfig.ssl = {
+    rejectUnauthorized: false,
+  };
+}
+
+const connection = new Client(databaseConfig);
+exec();
+
+export default connection;
+
+async function exec() {
+  try {
+    await connection.connect();
+    AppLog('Server', 'Connected to database');
+  } catch (error) {
+    AppLog('Error', `Interal error while connecting to database | ${error}`);
+  }
+}
