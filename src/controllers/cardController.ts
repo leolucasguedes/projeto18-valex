@@ -36,3 +36,28 @@ export async function activateCard(req: Request, res: Response) {
 
   res.sendStatus(201);
 }
+
+export async function blockCard(_req: Request, res: Response) {
+  const card: Card = res.locals.card;
+
+  AS.isCardAlreadyActive(card);
+
+  AS.isCardExpired(card.id);
+
+  const cardDataBlocked = { ...card, isBlocked: true };
+
+  await AS.blockCard(card.id, cardDataBlocked);
+
+  return res.sendStatus(200);
+}
+
+export async function unblockCard(_req: Request, res: Response) {
+  const card: Card = res.locals.card;
+
+  AS.isCardExpired(card.id);
+
+  const cardDataUnblocked = { ...card, isBlocked: false };
+  await AS.unblockCard(card.id, cardDataUnblocked);
+
+  return res.sendStatus(200);
+}

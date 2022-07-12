@@ -15,7 +15,7 @@ import "./../config/setup.js";
 const cryptrSecret = process.env.CRYPTR_SECRET || "secret";
 const CRYPTR = new Cryptr(cryptrSecret);
 
-async function employeeExist(id: number) {
+export async function employeeExist(id: number) {
   const result = await ER.findById(id);
 
   if (!result) {
@@ -31,7 +31,7 @@ async function employeeExist(id: number) {
   return result;
 }
 
-async function employeeHasTheCard(type: TransactionTypes, employee: Employee) {
+export async function employeeHasTheCard(type: TransactionTypes, employee: Employee) {
   const { employeeId }: any = employee;
 
   const employeeCard = await CR.findByTypeAndEmployeeId(type, employeeId);
@@ -47,7 +47,7 @@ async function employeeHasTheCard(type: TransactionTypes, employee: Employee) {
   AppLog("Service", "Employee does not have a card yet");
 }
 
-async function newCard(employee: Employee, id: number, type: TransactionTypes) {
+export async function newCard(employee: Employee, id: number, type: TransactionTypes) {
   const creditCardNumber = faker.finance.creditCardNumber();
   const cardHolderName = formatName(employee.fullName);
   const expirationDate = formatExpirationDate();
@@ -69,7 +69,7 @@ async function newCard(employee: Employee, id: number, type: TransactionTypes) {
   return await CR.insert(cardData);
 }
 
-function validSecurityCode(card: Card, securityCode: string) {
+export function validSecurityCode(card: Card, securityCode: string) {
   const result = CRYPTR.decrypt(card.securityCode) === securityCode;
 
   if (!result) {
@@ -115,5 +115,3 @@ function formatExpirationDate() {
   const month = new Date().getUTCMonth();
   return `${month}/${year}`;
 }
-
-export { employeeExist, employeeHasTheCard, newCard, validSecurityCode };

@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt"
+import dayjs from "dayjs";
 import AppError from "../config/error.js";
 import AppLog from "../events/AppLog.js";
 
@@ -12,7 +13,7 @@ import "./../config/setup.js";
 
 const SALT_ROUNDS = process.env.BCRYPT_SALT_ROUNDS || 10;
 
-async function findCard(id: number) {
+export async function findCard(id: number) {
     const result = await CR.findById(id);
   
     if (!result) {
@@ -27,7 +28,7 @@ async function findCard(id: number) {
     return result;
 }
 
-function isCardAlreadyActive(card: Card) {
+export function isCardAlreadyActive(card: Card) {
   const { password } = card;
   if (password != null) {
     throw new AppError(
@@ -40,7 +41,7 @@ function isCardAlreadyActive(card: Card) {
   AppLog("Service", "Card not active yet");
 }
 
-async function createPassword(card: Card, password: string) {
+export async function createPassword(card: Card, password: string) {
   const cryptPassword = bcrypt.hashSync(password, SALT_ROUNDS);
   return {
     employeeId: card.employeeId,
@@ -56,10 +57,35 @@ async function createPassword(card: Card, password: string) {
   };
 }
 
-async function activeCard(id: number, cardData: Card) {
+export async function activeCard(id: number, cardData: Card) {
   await CR.update(id, cardData);
 
   AppLog("Service", "Card activated");
 }
 
-export { findCard, isCardAlreadyActive, createPassword, activeCard };
+export async function blockCard(id: number, cardDataBlocked: Card) {
+  await CR.update(id, cardDataBlocked);
+
+  AppLog("Service", "Card blocked");
+}
+
+export async function unblockCard(id: number, cardDataUnblocked: Card) {
+  await CR.update(id, cardDataUnblocked);
+
+  AppLog("Service", "Card unblocked");
+}
+
+export async function isCardExpired(id: number) {
+  const card = await CR.findById(id);
+  const now = dayjs();
+
+  if (now.isAfter(card.expirationDate)) {
+    throw new AppError(
+      "Card expired",
+      404,
+      "Card expired",
+      "Ensure to provide a valid card"
+    );
+  }
+  AppLog("Service", "Card valid");
+}
