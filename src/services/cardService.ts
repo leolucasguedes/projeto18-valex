@@ -13,7 +13,6 @@ import { Card } from "../repositories/cardRepository.js";
 import "./../config/setup.js";
 
 const cryptrSecret = process.env.CRYPTR_SECRET || "secret";
-const SALT_ROUNDS = process.env.BCRYPT_SALT_ROUNDS || 10;
 const CRYPTR = new Cryptr(cryptrSecret);
 
 async function employeeExist(id: number) {
@@ -32,7 +31,7 @@ async function employeeExist(id: number) {
   return result;
 }
 
-async function employeeCards(type: TransactionTypes, employee: Employee) {
+async function employeeHasTheCard(type: TransactionTypes, employee: Employee) {
   const { employeeId }: any = employee;
 
   const employeeCard = await CR.findByTypeAndEmployeeId(type, employeeId);
@@ -70,6 +69,22 @@ async function newCard(employee: Employee, id: number, type: TransactionTypes) {
   return await CR.insert(cardData);
 }
 
+function validSecurityCode(card: Card, securityCode: string) {
+  const result = CRYPTR.decrypt(card.securityCode) === securityCode;
+
+  if (!result) {
+    throw new AppError(
+      "Invalid security code",
+      403,
+      "Invalid security code",
+      "Ensure to provide a valid security code"
+    );
+  }
+  AppLog("Service", "Valid security code");
+
+  return result;
+}
+
 function formatName(name: string) {
   const regex = /^(d[a,e,o,i])$/;
   const names = name.split(" ");
@@ -101,4 +116,4 @@ function formatExpirationDate() {
   return `${month}/${year}`;
 }
 
-export { employeeExist, employeeCards, newCard };
+export { employeeExist, employeeHasTheCard, newCard, validSecurityCode };
