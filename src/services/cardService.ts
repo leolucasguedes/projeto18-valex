@@ -1,6 +1,7 @@
 import { faker } from "@faker-js/faker";
 import Cryptr from "cryptr";
 import AppError from "../config/error.js";
+import AppLog from "../events/AppLog.js";
 
 import * as CR from "../repositories/cardRepository.js";
 import * as ER from "../repositories/employeeRepository.js";
@@ -26,23 +27,25 @@ async function employeeExist(id: number) {
       "An employee needs be created to get cards"
     );
   }
+
+  AppLog("Service", "Employee found");
   return result;
 }
 
-async function employeeHasOnlyOneCard(type : TransactionTypes, employee : Employee) {
+async function employeeCards(type: TransactionTypes, employee: Employee) {
   const { employeeId }: any = employee;
-  
+
   const employeeCard = await CR.findByTypeAndEmployeeId(type, employeeId);
 
-    if (employeeCard) {
-      throw new AppError(
-        "Employee already has a card",
-        403,
-        "Employee already has a card",
-        "An employee can only have one card"
-      );
-    }
-  
+  if (employeeCard) {
+    throw new AppError(
+      "Employee already has a card",
+      403,
+      "Employee already has a card",
+      "An employee can only have one card"
+    );
+  }
+  AppLog("Service", "Employee does not have a card yet");
 }
 
 async function newCard(employee: Employee, id: number, type: TransactionTypes) {
@@ -52,7 +55,6 @@ async function newCard(employee: Employee, id: number, type: TransactionTypes) {
   const cardCVV = CRYPTR.encrypt(faker.finance.creditCardCVV());
 
   const cardData: Card = {
-    id: id,
     employeeId: employee.id,
     number: creditCardNumber,
     cardholderName: cardHolderName,
@@ -67,7 +69,6 @@ async function newCard(employee: Employee, id: number, type: TransactionTypes) {
 
   return await CR.insert(cardData);
 }
-
 
 function formatName(name: string) {
   const regex = /^(d[a,e,o,i])$/;
@@ -100,8 +101,4 @@ function formatExpirationDate() {
   return `${month}/${year}`;
 }
 
-export {
-  employeeExist,
-  employeeHasOnlyOneCard,
-  newCard
-};
+export { employeeExist, employeeCards, newCard };

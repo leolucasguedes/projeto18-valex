@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import ITypes from '../interfaces/index.js';
+import ITypes from '../interfaces/logInterface.js';
 
 const types: ITypes = {
   Middleware: 'magenta',

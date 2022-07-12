@@ -9,7 +9,7 @@ export type TransactionTypes =
   | "health";
 
 export interface Card {
-  id: number;
+  id?: number;
   employeeId: number;
   number: string;
   cardholderName: string;
