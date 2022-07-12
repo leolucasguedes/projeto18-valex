@@ -3,7 +3,7 @@ import AppLog from "../events/AppLog.js";
 
 import * as CR from "./../repositories/companyRepository.js";
 
-export async function findEntity(apiKey: string) {
+export async function findCompany(apiKey: string) {
   const result = await CR.findByApiKey(apiKey);
 
   if (!result) {

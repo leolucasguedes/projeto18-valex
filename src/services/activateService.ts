@@ -89,3 +89,17 @@ export async function isCardExpired(id: number) {
   }
   AppLog("Service", "Card valid");
 }
+
+export async function isCardBlocked(id: number) {
+  const card = await CR.findById(id);
+
+  if (card.isBlocked === true) {
+    throw new AppError(
+      "Card blocked",
+      404,
+      "Card blocked",
+      "Ensure to provide a not card blocked"
+    );
+  }
+  AppLog("Service", "Card not blocked");
+}

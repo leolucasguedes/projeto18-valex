@@ -10,7 +10,7 @@ export async function createCard(req: Request, res: Response) {
   const { id, type }: { id: number; type: TransactionTypes } = req.body;
   const apiKey = res.locals.header;
 
-  await CNS.findEntity(apiKey);
+  await CNS.findCompany(apiKey);
 
   const employee: Employee = await CS.employeeExist(id);
 
@@ -43,6 +43,8 @@ export async function blockCard(_req: Request, res: Response) {
   AS.isCardAlreadyActive(card);
 
   AS.isCardExpired(card.id);
+
+  AS.isCardBlocked(card.id);
 
   const cardDataBlocked = { ...card, isBlocked: true };
 
