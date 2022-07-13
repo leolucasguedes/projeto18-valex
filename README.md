@@ -160,7 +160,7 @@ Valex simulates an API that manages a benefit card, generally made available by 
 ### Card payment
 
 ```http
-  POST /card/payment
+  POST /card/:id/payment
 ```
 
 #### Request:
