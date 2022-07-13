@@ -6,9 +6,10 @@ import * as CR from "../repositories/cardRepository.js";
 import { Card } from "../repositories/cardRepository.js";
 
 export async function verifyCard(req: Request, res: Response, next: NextFunction) {
-  const { id, password }: { id: number; password : string } = req.body;
+  const { password }: { password : string } = req.body;
+  const { id } = req.params;
 
-  const card: Card = await CR.findById(id);
+  const card: Card = await CR.findById(Number(id));
 
   if (!card) {
     throw new AppError(

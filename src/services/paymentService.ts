@@ -3,16 +3,11 @@ import AppLog from "../events/AppLog.js";
 
 import * as BR from "../repositories/businessRepository.js";
 import * as PR from "../repositories/paymentRepository.js";
-import * as RR from "../repositories/rechargeRepository.js";
+import * as CS from "./../services/cardService.js";
+import * as RS from "./../services/rechargeService.js";
 
 import { Card } from "../repositories/cardRepository.js";
 import { PaymentInsertData } from "../repositories/paymentRepository.js";
-import { Recharge } from "../repositories/rechargeRepository.js";
-
-export interface CardPayment {
-    id: number;
-    password: string;
-  }
 
 export function verifyCard(cardFound: Card, password: string) {
   if (password != cardFound.password) {
@@ -40,11 +35,13 @@ export async function verifyBusinesses(id: number, type: string) {
 }
 
 export async function verifyAmount(id: number, amount: number) {
-  const recharge = await RR.findByCardId(id);
+  const transactions = await RS.transactions(Number(id));
+  const recharges = await RS.recharges(Number(id));
+  const balance = await CS.getBalance(transactions, recharges)
 
-  if (+recharge < amount) {
+  if (balance < amount) {
     throw new AppError(
-      "Amount not enough",
+      "Balance not enough",
       404,
       "Amount not enough",
       "Ensure to recharge your card before buy"

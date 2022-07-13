@@ -5,8 +5,6 @@ import AppLog from "../events/AppLog.js";
 
 import * as CR from "../repositories/cardRepository.js";
 
-import { TransactionTypes } from "../repositories/cardRepository.js";
-import { Employee } from "../repositories/employeeRepository.js";
 import { Card } from "../repositories/cardRepository.js";
 
 import "./../config/setup.js";

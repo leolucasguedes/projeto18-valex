@@ -6,6 +6,6 @@ import verifyHeader from "../middlewares/headerMiddleware.js";
 
 const rechargeRouter = Router();
 
-rechargeRouter.post("/recharge", validSchema(rechargeSchema, "recharge"), verifyHeader, RF.rechargeCard);
+rechargeRouter.post("/card/recharge", validSchema(rechargeSchema, "recharge"), verifyHeader, RF.rechargeCard);
 
 export default rechargeRouter;

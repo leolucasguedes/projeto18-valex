@@ -9,6 +9,8 @@ import * as ER from "../repositories/employeeRepository.js";
 import { TransactionTypes } from "../repositories/cardRepository.js";
 import { Employee } from "../repositories/employeeRepository.js";
 import { Card } from "../repositories/cardRepository.js";
+import { PaymentWithBusinessName } from "../repositories/paymentRepository.js";
+import { Recharge } from "../repositories/rechargeRepository.js";
 
 import "./../config/setup.js";
 
@@ -66,7 +68,8 @@ export async function newCard(employee: Employee, id: number, type: TransactionT
     type: type,
   };
 
-  return await CR.insert(cardData);
+  await CR.insert(cardData);
+  AppLog("Service", "Card created");
 }
 
 export function validSecurityCode(card: Card, securityCode: string) {
@@ -83,6 +86,16 @@ export function validSecurityCode(card: Card, securityCode: string) {
   AppLog("Service", "Valid security code");
 
   return result;
+}
+
+export async function getBalance(transactions : PaymentWithBusinessName[], recharges : Recharge[]) {
+  const totalPayment = transactions.reduce(sumTransaction, 0);
+  const totalRecharge = recharges.reduce(sumTransaction, 0);
+  return totalRecharge - totalPayment; 
+}
+
+function sumTransaction(amount: number, transaction){
+  return amount + transaction.amount;
 }
 
 function formatName(name: string) {

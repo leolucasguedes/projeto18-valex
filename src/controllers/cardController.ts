@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import * as CS from "./../services/cardService.js";
+import * as RS from "./../services/rechargeService.js";
 import * as CNS from "./../services/companyService.js";
 import * as AS from "./../services/activateService.js";
 import { Employee } from "../repositories/employeeRepository.js";
@@ -22,9 +23,10 @@ export async function createCard(req: Request, res: Response) {
 }
 
 export async function activateCard(req: Request, res: Response) {
-  const { id, securityCode, password }: { id: number; securityCode : string; password : string  } = req.body;
+  const { securityCode, password }: { securityCode : string; password : string  } = req.body;
+  const { id } = req.params;
 
-  const card: Card = await AS.findCard(id);
+  const card: Card = await AS.findCard(Number(id));
 
   AS.isCardAlreadyActive(card);
 
@@ -32,7 +34,7 @@ export async function activateCard(req: Request, res: Response) {
 
   const cardData = await AS.createPassword(card, password);
 
-  await AS.activeCard(id, cardData)
+  await AS.activeCard(Number(id), cardData)
 
   res.sendStatus(201);
 }
@@ -62,4 +64,18 @@ export async function unblockCard(_req: Request, res: Response) {
   await AS.unblockCard(card.id, cardDataUnblocked);
 
   return res.sendStatus(200);
+}
+
+export async function getCardStatements(req: Request, res: Response){
+	const { id } = req.params;
+
+  const card: Card = await AS.findCard(Number(id));
+
+  const transactions = await RS.transactions(Number(id));
+
+  const recharges = await RS.recharges(Number(id));
+
+  const balance = await CS.getBalance(transactions, recharges)
+
+	res.status(200).send({balance, transactions, recharges});
 }

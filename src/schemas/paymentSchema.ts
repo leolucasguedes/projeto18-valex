@@ -2,10 +2,7 @@ import Joi from "joi";
 
 const passwordRegex = /^\d{4}$/;
 const buySchema = Joi.object({
-  card: Joi.object({
-    id: Joi.number().integer().positive().required(),
-    password: Joi.string().length(4).pattern(passwordRegex).required(),
-  }).required(),
+  password: Joi.string().length(4).pattern(passwordRegex).required(),
   businessId: Joi.number().integer().positive().required(),
   amount: Joi.number().integer().positive().required(),
 });
