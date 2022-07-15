@@ -39,6 +39,19 @@ export function isCardAlreadyActive(card: Card) {
   AppLog("Service", "Card not active yet");
 }
 
+export function isCardActive(card: Card) {
+  const { password } = card;
+  if (password === null) {
+    throw new AppError(
+      "Card not active",
+      404,
+      "Card not active",
+      "The card is not active"
+    );
+  }
+  AppLog("Service", "Card is active");
+}
+
 export async function createPassword(card: Card, password: string) {
   const cryptPassword = bcrypt.hashSync(password, SALT_ROUNDS);
   return {
@@ -75,7 +88,7 @@ export async function unblockCard(id: number, cardDataUnblocked: Card) {
 
 export async function isCardExpired(id: number) {
   const card = await CR.findById(id);
-  const now = dayjs();
+  const now = dayjs("M-YY");
 
   if (now.isAfter(card.expirationDate)) {
     throw new AppError(
@@ -88,15 +101,29 @@ export async function isCardExpired(id: number) {
   AppLog("Service", "Card valid");
 }
 
-export async function isCardBlocked(id: number) {
+export async function isCardAlreadyBlocked(id: number) {
   const card = await CR.findById(id);
 
   if (card.isBlocked === true) {
     throw new AppError(
-      "Card blocked",
+      "Card already blocked",
       404,
       "Card blocked",
       "Ensure to provide a not card blocked"
+    );
+  }
+  AppLog("Service", "Card not blocked");
+}
+
+export async function isCardBlocked(id: number) {
+  const card = await CR.findById(id);
+
+  if (card.isBlocked != true) {
+    throw new AppError(
+      "Card is not blocked",
+      404,
+      "Card not blocked",
+      "Ensure to provide a blocked card to unblock "
     );
   }
   AppLog("Service", "Card not blocked");

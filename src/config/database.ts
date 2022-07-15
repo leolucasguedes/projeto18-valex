@@ -23,6 +23,6 @@ async function exec() {
     await connection.connect();
     AppLog('Server', 'Connected to database');
   } catch (error) {
-    AppLog('Error', `Interal error while connecting to database | ${error}`);
+    AppLog('Error', `Internal error while connecting to database | ${error}`);
   }
 }

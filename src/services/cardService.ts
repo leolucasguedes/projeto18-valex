@@ -53,13 +53,14 @@ export async function newCard(employee: Employee, id: number, type: TransactionT
   const creditCardNumber = faker.finance.creditCardNumber();
   const cardHolderName = formatName(employee.fullName);
   const expirationDate = formatExpirationDate();
-  const cardCVV = CRYPTR.encrypt(faker.finance.creditCardCVV());
+  const cardCVV = faker.finance.creditCardCVV();
+  const securityCVV = CRYPTR.encrypt(cardCVV);
 
   const cardData: Card = {
     employeeId: employee.id,
     number: creditCardNumber,
     cardholderName: cardHolderName,
-    securityCode: cardCVV,
+    securityCode: securityCVV,
     expirationDate: expirationDate,
     password: undefined,
     isVirtual: true,
@@ -70,6 +71,7 @@ export async function newCard(employee: Employee, id: number, type: TransactionT
 
   await CR.insert(cardData);
   AppLog("Service", "Card created");
+  return cardCVV;
 }
 
 export function validSecurityCode(card: Card, securityCode: string) {

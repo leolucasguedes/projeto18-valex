@@ -7,6 +7,8 @@ import { Employee } from "../repositories/employeeRepository.js";
 import { TransactionTypes } from "../repositories/cardRepository.js";
 import { Card } from "../repositories/cardRepository.js";
 
+import AppLog from "../events/AppLog.js";
+
 export async function createCard(req: Request, res: Response) {
   const { id, type }: { id: number; type: TransactionTypes } = req.body;
   const apiKey = res.locals.header;
@@ -17,9 +19,11 @@ export async function createCard(req: Request, res: Response) {
 
   await CS.employeeHasTheCard(type, employee);
 
-  await CS.newCard(employee, id, type);
+  const cvv = await CS.newCard(employee, id, type);
 
-  res.sendStatus(201);
+  AppLog("Controller", "Card create");
+
+  res.status(201).send({cvv});
 }
 
 export async function activateCard(req: Request, res: Response) {
@@ -36,21 +40,25 @@ export async function activateCard(req: Request, res: Response) {
 
   await AS.activeCard(Number(id), cardData)
 
+  AppLog("Controller", "Card active");
+
   res.sendStatus(201);
 }
 
 export async function blockCard(_req: Request, res: Response) {
   const card: Card = res.locals.card;
 
-  AS.isCardAlreadyActive(card);
+  AS.isCardActive(card);
 
-  AS.isCardExpired(card.id);
+  await AS.isCardExpired(card.id);
 
-  AS.isCardBlocked(card.id);
+  await AS.isCardAlreadyBlocked(card.id);
 
   const cardDataBlocked = { ...card, isBlocked: true };
 
   await AS.blockCard(card.id, cardDataBlocked);
+
+  AppLog("Controller", "Card block");
 
   return res.sendStatus(200);
 }
@@ -58,10 +66,15 @@ export async function blockCard(_req: Request, res: Response) {
 export async function unblockCard(_req: Request, res: Response) {
   const card: Card = res.locals.card;
 
-  AS.isCardExpired(card.id);
+  await AS.isCardExpired(card.id);
+
+  await AS.isCardBlocked(card.id);
 
   const cardDataUnblocked = { ...card, isBlocked: false };
+
   await AS.unblockCard(card.id, cardDataUnblocked);
+
+  AppLog("Controller", "Card unblock");
 
   return res.sendStatus(200);
 }
