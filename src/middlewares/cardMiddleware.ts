@@ -7,7 +7,7 @@ import * as CR from "../repositories/cardRepository.js";
 import { Card } from "../repositories/cardRepository.js";
 
 export async function verifyCard(req: Request, res: Response, next: NextFunction) {
-  //const { password }: { password : string } = req.body;
+  const { password }: { password : string } = req.body;
   const { id } = req.params;
   
 
@@ -21,6 +21,7 @@ export async function verifyCard(req: Request, res: Response, next: NextFunction
       "Ensure to provide a valid card id"
     );
   }
+  bcrypt.compare(password, card.password, function (err, result) {});
 
   res.locals.card = card;
   return next();

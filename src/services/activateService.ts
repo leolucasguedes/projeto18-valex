@@ -126,5 +126,5 @@ export async function isCardBlocked(id: number) {
       "Ensure to provide a blocked card to unblock "
     );
   }
-  AppLog("Service", "Card not blocked");
+  AppLog("Service", "Card can be unblock");
 }
