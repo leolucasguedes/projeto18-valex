@@ -9,7 +9,7 @@ export async function buyPOS(req : Request, res : Response){
     const { businessId, amount }: { businessId: number; amount: number } = req.body;
     const card: Card = res.locals.card;
 
-    AS.isCardAlreadyActive(card);
+    AS.isCardActive(card);
 
     AS.isCardExpired(card.id);
   
@@ -24,5 +24,4 @@ export async function buyPOS(req : Request, res : Response){
     PS.insertPayment(card.id, businessId, amount);
 
     res.sendStatus(200);
-
 }

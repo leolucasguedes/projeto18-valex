@@ -14,7 +14,7 @@ export async function rechargeCard(req: Request, res: Response) {
 
   const card: Card = await AS.findCard(id);
 
-  AS.isCardAlreadyActive(card);
+  AS.isCardActive(card);
 
   AS.isCardExpired(id);
 

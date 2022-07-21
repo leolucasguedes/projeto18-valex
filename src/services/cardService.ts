@@ -34,9 +34,8 @@ export async function employeeExist(id: number) {
 }
 
 export async function employeeHasTheCard(type: TransactionTypes, employee: Employee) {
-  const { employeeId }: any = employee;
 
-  const employeeCard = await CR.findByTypeAndEmployeeId(type, employeeId);
+  const employeeCard = await CR.findByTypeAndEmployeeId(type, employee.id);
 
   if (employeeCard) {
     throw new AppError(
