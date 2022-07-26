@@ -11,17 +11,17 @@ export async function buyPOS(req : Request, res : Response){
 
     AS.isCardActive(card);
 
-    AS.isCardExpired(card.id);
+    await AS.isCardExpired(card.id);
   
-    AS.isCardBlocked(card.id);
+    await AS.isCardBlocked(card.id);
 
     PS.verifyCard(card, card.password)
     
-    PS.verifyBusinesses(businessId, card.type);
+    await PS.verifyBusinesses(businessId, card.type);
 
-    PS.verifyAmount(card.id, amount);
+    await PS.verifyAmount(card.id, amount);
 
-    PS.insertPayment(card.id, businessId, amount);
+    await PS.insertPayment(card.id, businessId, amount);
 
     res.sendStatus(200);
 }

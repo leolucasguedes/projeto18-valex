@@ -52,7 +52,7 @@ export async function blockCard(_req: Request, res: Response) {
 
   await AS.isCardExpired(card.id);
 
-  await AS.isCardAlreadyBlocked(card.id);
+  await AS.isCardNotBlocked(card.id);
 
   const cardDataBlocked = { ...card, isBlocked: true };
 

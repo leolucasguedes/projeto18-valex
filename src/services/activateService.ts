@@ -101,7 +101,7 @@ export async function isCardExpired(id: number) {
   AppLog("Service", "Card valid");
 }
 
-export async function isCardAlreadyBlocked(id: number) {
+export async function isCardBlocked(id: number) {
   const card = await CR.findById(id);
 
   if (card.isBlocked === true) {
@@ -115,7 +115,7 @@ export async function isCardAlreadyBlocked(id: number) {
   AppLog("Service", "Card not blocked");
 }
 
-export async function isCardBlocked(id: number) {
+export async function isCardNotBlocked(id: number) {
   const card = await CR.findById(id);
 
   if (card.isBlocked != true) {
@@ -123,8 +123,8 @@ export async function isCardBlocked(id: number) {
       "Card is not blocked",
       404,
       "Card not blocked",
-      "Ensure to provide a blocked card to unblock "
+      "Ensure to provide a unblock card "
     );
   }
-  AppLog("Service", "Card can be unblock");
+  AppLog("Service", "Card blocked");
 }

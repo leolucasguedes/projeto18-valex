@@ -16,11 +16,11 @@ export async function rechargeCard(req: Request, res: Response) {
 
   AS.isCardActive(card);
 
-  AS.isCardExpired(id);
+  await AS.isCardExpired(id);
 
-  AS.isCardBlocked(id);
+  await AS.isCardBlocked(id);
 
-  RS.rechargeCard(id, amount);
+  await RS.rechargeCard(id, amount);
 
   res.sendStatus(200);
 }

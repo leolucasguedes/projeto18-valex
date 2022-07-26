@@ -1,5 +1,6 @@
 <p align="center">
-  <img  src="https://cdn.iconscout.com/icon/free/png-256/credit-card-2650080-2196542.png">
+  <img src="https://cdn.iconscout.com/icon/free/png-256/credit-card-2650080-2196542.png"
+    width="200px" height="200px" >
 </p>
 <h1 align="center">
   Valex
@@ -13,7 +14,6 @@
   <img src="https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white" height="30px"/>  
   <img src="https://img.shields.io/badge/Express.js-404D59?style=for-the-badge&logo=express.js&logoColor=white" height="30px"/>
   <img src="https://img.shields.io/badge/Heroku-430098?style=for-the-badge&logo=heroku&logoColor=white" height="30px"/>
-  <!-- Badges source: https://dev.to/envoy_/150-badges-for-github-pnk -->
 </div>
 
 <br/>
@@ -36,10 +36,10 @@ Valex simulates an API that manages a benefit card, generally made available by 
 
 ## API Reference
 
-### Get card statements
+#### Get card statements
 
 ```http
-  GET /cards/:id/balance
+GET /cards/:id/balance
 ```
 
 #### Response:
@@ -57,10 +57,10 @@ Valex simulates an API that manages a benefit card, generally made available by 
 ```
 #
 
-### Create a card
+#### Create a card
 
 ```http
-  POST /card/create
+POST /card/create
 ```
 
 #### Request:
@@ -85,10 +85,10 @@ Valex simulates an API that manages a benefit card, generally made available by 
 
 #
 
-### Activate a card
+#### Activate a card
 
 ```http
-  POST card/:id/activate
+POST /card/:id/activate
 ```
 
 #### Request:
@@ -104,10 +104,10 @@ Valex simulates an API that manages a benefit card, generally made available by 
 
 #
 
-### Block a card
+#### Block a card
 
 ```http
-  POST /card/:id/block
+POST /card/:id/block
 ```
 
 #### Request:
@@ -120,10 +120,10 @@ Valex simulates an API that manages a benefit card, generally made available by 
 
 #
 
-### Unblock a card
+#### Unblock a card
 
 ```http
-  POST /card/:id/unblock
+POST /card/:id/unblock
 ```
 
 #### Request:
@@ -136,10 +136,10 @@ Valex simulates an API that manages a benefit card, generally made available by 
 
 #
 
-### Recharge a card
+#### Recharge a card
 
 ```http
-  POST /card/recharge
+POST /card/recharge
 ```
 
 #### Request:
@@ -160,14 +160,14 @@ Valex simulates an API that manages a benefit card, generally made available by 
 ### Card payment
 
 ```http
-  POST /card/:id/payment
+POST /card/:id/payment
 ```
 
 #### Request:
 
 | Headers     | Type     | Description           |
 | :---------- | :------- | :-------------------- |
-| `x-api-key`    | `string` | **Required**. api key |
+| `x-api-key` | `string` | **Required**. api key |
 
 ####
 
